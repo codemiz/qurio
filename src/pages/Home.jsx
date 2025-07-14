@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useAuth } from "../context/AuthContext";
-import { logout, getMessages, getChatPreviews , uploadAvatar } from "../api";
+import { logout, getMessages, getChatPreviews , uploadAvatar , deleteAccount } from "../api";
 import { useNavigate } from "react-router-dom";
 import socket from "../web-sockets/socket";
 
@@ -8,9 +8,11 @@ function Home() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [onlineUsers, setOnlineUsers] = useState([]);
+  const [selectedTab, setSelectedTab ]= useState("chats");
   const [selectedUser, setSelectedUser] = useState(null);
   const [isMobileChatOpen, setIsMobileChatOpen] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
   const [message, setMessage] = useState("");
   const [unreadCounts, setUnreadCounts] = useState({});
   const [messages, setMessages] = useState({});
@@ -22,6 +24,8 @@ function Home() {
 
   useEffect(() => {
     socket.on("online-users", (users) => {
+      console.log("onlien user" , users);
+      
       setOnlineUsers(users);
     });
 
@@ -205,6 +209,10 @@ function Home() {
     await logout();
     navigate("/login");
   }
+  async function deleteAcc() {
+    await deleteAccount(user._id);
+    navigate("/login");
+  }
 
   const sortedChatPreviews = [...chatPreviews].sort((a, b) => {
   const lastA = messages[a.friend._id]?.at(-1)?.timestamp || 0;
@@ -251,16 +259,16 @@ function Home() {
             <img 
               onClick={() =>setShowMenu(!showMenu)}
               src={user.profilePic}
-              className="w-8 h-8 cursor-pointer rounded-full"
+              className="w-8 h-8 cursor-pointer rounded-full object-cover"
              alt="profile pic"
             />
           </div>
           </div>
           {showMenu && 
           <div className="menu-options w-full h-24 border-t border-gray-400 flex items-center justify-center gap-10 ">
-            <div onClick={()=>fileInputRef.current.click()} className="flex flex-col items-center text-sm font-light"> <img
+            <div onClick={()=>fileInputRef.current.click()} className="flex flex-col items-center text-sm font-light cursor-pointer"> <img
               src={user.profilePic}
-              className="w-10 h-10 border rounded-full p-0.5 cursor-pointer"
+              className="w-10 h-10 border rounded-full p-0.5 object-cover"
               alt="search icon"
             />Change dp</div>
 
@@ -275,13 +283,13 @@ function Home() {
               ref={fileInputRef}
               className="hidden"
             />
-            <div className="flex flex-col items-center text-sm font-light"> <img
+            <div onClick={()=> setShowPopup(true)} className="flex flex-col items-center cursor-pointer text-sm font-light"> <img
               src="./src/assets/user.png"
               className="w-10 h-10 border rounded-full p-1"
               alt="search icon"
             />Delete account</div>
 
-             <div className="flex flex-col items-center text-sm font-light"> <img
+             <div onClick={logoutUser} className="flex flex-col items-center text-sm font-light cursor-pointer"> <img
               src="./src/assets/back.png"
               className="w-10 h-10 border rounded-full p-1"
               alt="search icon"
@@ -289,18 +297,17 @@ function Home() {
           </div>
           }
         </div>
-        <div className="flex justify-between w-full text-sm font-light border-b-[1px] border-gray-200">
-          <div className=" w-1/3 hover:bg-gray-200 bg-gray-200  flex justify-center">
-            Chats
+        <div className="flex justify-between w-full text-md font-light border-b-[1px] border-gray-200">
+          <div onClick={()=> setSelectedTab("chats")} className=" w-1/2 hover:bg-gray-200 bg-gray-200 cursor-pointer flex justify-center">
+            my chats
           </div>
-          <div className=" w-1/3 hover:bg-gray-200  flex justify-center">
-            Requests
+          <div onClick={()=> setSelectedTab("online")} className=" w-1/2 hover:bg-gray-100 cursor-pointer  flex justify-center">
+            online users
           </div>
-          <div className=" w-1/3 hover:bg-gray-200 flex justify-center">
-            Invites
-          </div>
+          
         </div>
 
+      {selectedTab == "chats" && 
         <div className="overflow-y-auto h-[calc(100%-4rem)]">
           {sortedChatPreviews.map((preview) => {
               const isOnline = onlineUsers.some(
@@ -333,22 +340,22 @@ function Home() {
                   key={preview.friend._id}
                   className={`p-3 md:p-2 ${
                     user._id === preview.friend._id && "hidden"
-                  } hover:bg-gray-100 cursor-pointer flex gap-2 items-center border-b-[1px] border-gray-200 relative`}
+                  } hover:bg-gray-100 cursor-pointer h-20 flex gap-2 items-center border-b-[1px] border-gray-200 relative`}
                 >
                   <img
-                    src="./src/assets/default_profile_pic.jpg"
+                    src={preview.friend.profilePic}
                     alt="profile pic"
-                    className="w-8 h-8 rounded-full"
+                    className="w-12 h-12 rounded-full object-cover"
                   />
 
                   <div className="flex flex-col justify-center">
-                    <p className="text-sm">
+                    <p className="text-xl font-medium">
                       {preview.friend.name}{" "}
                       {isOnline && (
-                        <span className="ml-1 w-2 h-2 bg-green-500 rounded-full inline-block"></span>
+                        <span className="ml-1 w-2 h-2 bg-green-500 rounded-full inline-block mb-0.5"></span>
                       )}
                     </p>
-                    <p className="text-xs font-light truncate max-w-[180px]">
+                    <p className="text-sm font-light mb-1 truncate max-w-[180px]">
                       {isSender && "you: "}
                       {lastMsg?.content || "No messages yet"}
                     </p>
@@ -363,6 +370,35 @@ function Home() {
               );
             })}
         </div>
+        }
+        {selectedTab == "online" && 
+         <div className="overflow-y-auto  h-[calc(100%-4rem)]">
+    {onlineUsers.map((onlineUser) => (
+       <div
+       onClick={() => {
+        setSelectedUser(onlineUser);
+         setIsMobileChatOpen(true);
+       }}
+        key={onlineUser._id}
+       className={`p-3 md:p-2 ${
+        user._id === onlineUser._id && "hidden"
+      } hover:bg-gray-100 cursor-pointer flex gap-2 items-center border-b-[1px] border-gray-200 relative`}
+     >
+      <img src={onlineUser.profilePic}  alt="profile pic" className="w-8 h-8 rounded-full" />
+
+      <div className="flex flex-col justify-center">
+        <p className="text-sm">{onlineUser.name}</p>
+       
+      </div>
+      {unreadCounts[onlineUser._id] > 0 && (
+        <div className="w-5 h-5 bg-indigo-500 absolute top-1/3 right-4 rounded-full text-xs inline-flex justify-center items-center pb-0.5 text-white font-semibold">
+          {unreadCounts[onlineUser._id]}
+        </div>
+      )}
+    </div>
+  ))}
+</div>
+        }
       </div>
       {selectedUser ? (
         <>
@@ -381,13 +417,13 @@ function Home() {
               </button>
 
               <img
-                src="./src/assets/default_profile_pic.jpg"
+                src={selectedUser.profilePic}
                 alt="profile pic"
-                className="w-10 h-10 rounded-full"
+                className="w-10 h-10 rounded-full object-cover"
               />
 
               <div className="flex flex-col justify-center">
-                <p className="text-sm font-semibold">
+                <p className="text-xl font-semibold">
                   {selectedUser && selectedUser.name}
                 </p>
 
@@ -420,7 +456,7 @@ function Home() {
                           : "bg-gray-200"
                       } py-2 px-4 rounded-2xl shadow max-w-xs break-words`}
                     >
-                      <div>{msg.content}</div>
+                      <div className="text-lg">{msg.content}</div>
                       <div
                         className={`text-xs mt-1 text-right ${
                           msg.senderID === user._id
@@ -433,7 +469,7 @@ function Home() {
                           minute: "2-digit",
                         })}
                         {msg.senderID === user._id && (
-                        <span className="ml-1 text-xs">
+                        <span className="ml-3 text-xs">
                           {msg.isRead ? "✓✓" : "✓"}
                         </span>
                       )}
@@ -491,10 +527,18 @@ function Home() {
           <p className="text-sm">Select a chat to see its content!</p>
         </div>
       )}
-
-      {/* <div className="menu w-full h-screen flex justify-center items-center fixed top-18">
-        <div className="popup w-4/5 lg:w-3/5  xl:w-2/5 2xl:w-1/5 h-1/5 bg-gray-100 rounded-2xl shadow"></div>
-      </div> */}
+    {showPopup && 
+      <div className="menu w-full h-screen flex justify-center items-center fixed top-18">
+        <div className="popup w-4/5 lg:w-3/5  xl:w-2/5 2xl:w-1/5 h-[15%] bg-gray-100 rounded-2xl shadow flex flex-col justify-center items-center gap-6">
+          <p className="font-thin">Do you really want to delete your account?</p>
+          <div className="flex gap-4">
+          <button onClick={()=>setShowPopup(false)} className="border cursor-pointer hover:bg-green-700 px-6 py-1 bg-green-600 text-white text-xl font-medium rounded-lg">Cancel</button>
+          <button onClick={deleteAcc} className="border px-6 py-1 bg-red-500 cursor-pointer hover:bg-red-600 text-white text-xl font-medium rounded-lg">Delete</button>
+          </div>
+            
+        </div>
+      </div>
+      }
     </div>
   );
 }
@@ -510,29 +554,4 @@ export default Home;
           </button> */
 }
 
-//   <div className="overflow-y-auto  h-[calc(100%-4rem)]">
-//   {onlineUsers.map((onlineUser) => (
-//     <div
-//       onClick={() => {
-//         setSelectedUser(onlineUser);
-//         setIsMobileChatOpen(true);
-//       }}
-//       key={onlineUser._id}
-//       className={`p-3 md:p-2 ${
-//         user._id === onlineUser._id && "hidden"
-//       } hover:bg-gray-100 cursor-pointer flex gap-2 items-center border-b-[1px] border-gray-200 relative`}
-//     >
-//       <img src="./src/assets/default_profile_pic.jpg"  alt="profile pic" className="w-8 h-8 rounded-full" />
-
-//       <div className="flex flex-col justify-center">
-//         <p className="text-sm">{onlineUser.name}</p>
-//         <p className="text-xs font-light">{(messages[onlineUser._id] || []).slice(-1)[0]?.senderID == user._id && "you: "}{(messages[onlineUser._id] || []).slice(-1)[0]?.content || "No messages yet"}</p>
-//       </div>
-//       {unreadCounts[onlineUser._id] > 0 && (
-//         <div className="w-5 h-5 bg-indigo-500 absolute top-1/3 right-4 rounded-full text-xs inline-flex justify-center items-center pb-0.5 text-white font-semibold">
-//           {unreadCounts[onlineUser._id]}
-//         </div>
-//       )}
-//     </div>
-//   ))}
-// </div>
+ 
