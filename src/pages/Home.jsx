@@ -381,13 +381,13 @@ function Home() {
        }}
         key={onlineUser._id}
        className={`p-3 md:p-2 ${
-        user._id === onlineUser._id && "hidden"
+        (user._id === onlineUser._id ) && "hidden"
       } hover:bg-gray-100 cursor-pointer flex gap-2 items-center border-b-[1px] border-gray-200 relative`}
      >
-      <img src={onlineUser.profilePic}  alt="profile pic" className="w-8 h-8 rounded-full" />
+      <img src={onlineUser.profilePic}  alt="profile pic" className="w-12 h-12 rounded-full" />
 
       <div className="flex flex-col justify-center">
-        <p className="text-sm">{onlineUser.name}</p>
+        <p className="text-xl font-medium">{onlineUser.name}</p>
        
       </div>
       {unreadCounts[onlineUser._id] > 0 && (
