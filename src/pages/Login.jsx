@@ -20,7 +20,7 @@ function Login() {
     try {
       const res = await login(formData);
       setUser(res.data.user);
-      console.log("User logged in", res.data.user);
+     
   
       setTimeout(() => {
         

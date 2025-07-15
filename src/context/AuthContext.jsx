@@ -21,7 +21,7 @@ export const AuthProvider = ({children}) =>{
 
     useEffect(() => {
       socket.on("connect" , ()=>{
-        console.log("connected to server" , socket.id);
+     
 
         
       })

@@ -25,7 +25,6 @@ function Home() {
 
   useEffect(() => {
     socket.on("online-users", (users) => {
-      console.log("onlien user" , users);
       
       setOnlineUsers(users);
     });
@@ -37,13 +36,13 @@ function Home() {
 
   useEffect(() => {
     getChatPreviews().then((res) => {
-      console.log(res.data);
+      
 
       setChatPreviews(res.data);
     });
   }, []);
   useEffect(() => {
-    console.log("Updated chatPreviews:", chatPreviews);
+   
   }, [chatPreviews]);
 
   useEffect(() => {
@@ -80,7 +79,7 @@ function Home() {
           [senderID]: [...(prevMessages[senderID] || []), newMsg],
         };
 
-        // Update previews
+       
         setChatPreviews((prevPreviews) => {
           const updated = prevPreviews.map((preview) => {
             if (preview.friend._id === senderID) {
@@ -99,14 +98,7 @@ function Home() {
           return updated
         });
         
-        //     return updated.sort((a, b) => {
-        //     const timeA = a.lastMessage?.timestamp || 0;
-        //     const timeB = b.lastMessage?.timestamp || 0;
-        //     return timeB - timeA;
-        //   });
-        // });
-
-        // Mark as read if chat is open
+      
         if (selectedUser && selectedUser._id === senderID) {
           socket.emit("markMessagesAsRead", {
             from: senderID,
@@ -174,7 +166,7 @@ function Home() {
       setUnreadCounts((prev) => ({ ...prev, [selectedUser._id]: 0 }));
       try {
         getMessages(selectedUser._id).then((res) => {
-          console.log(res.data);
+         
 
           const data = res.data;
           setMessages((prev) => ({

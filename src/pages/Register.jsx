@@ -28,13 +28,13 @@ function Register() {
       const res = await register(formData)
       setUser(res.data.user)
       navigate("/")
-      console.log(res);
+      
       
     } catch (error) {
       if(error.response && error.response.status === 400){
       setError("User already exists")
     }
-      console.log(error.response.data);
+     
       
     }
     
