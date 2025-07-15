@@ -23,7 +23,7 @@ A fully functional real-time messaging web application built with the MERN stack
 
   ---
 
-[Live Demo](https://qurio-chat.vercel.app)
+[Live Demo](https://qurio-chat.vercel.app) - 
 [Backend GitHub Repo](https://github.com/codemiz/qurio-backend)
 
 
