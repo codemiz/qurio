@@ -1,14 +1,29 @@
 
 ![Logo](./public/logo.png)
-# React + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+---
+# Qurio - A chat app
 
-Currently, two official plugins are available:
+A fully functional real-time messaging web application built with the MERN stack. The user interface is highly responsive — it adapts seamlessly across devices, offering a mobile experience similar to WhatsApp on phones and a layout that resembles WhatsApp Web on desktops. 
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## Expanding the ESLint configuration
+## Technologies Used: 
 
-If you are developing a production application, we recommend using TypeScript and enable type-aware lint rules. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- React
+- Node js
+- Express
+- MongoDB
+- Tailwind
+- Zod
+- Bcrypt
+- JWT Auth
+- Socket.io
+- Cloudinary
+
+  ---
+
+[Live Demo](https://qurio-chat.vercel.app)
+[Backend GitHub Repo](https://github.com/codemiz/qurio-backend)
+
+
