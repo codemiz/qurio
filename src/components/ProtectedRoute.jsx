@@ -6,7 +6,7 @@ const ProtectedRoute = ({children}) =>{
     const {user , loading}= useAuth()
 
     if (loading) return <Loading />
-    return user ? children : <Navigate to="/register" />
+    return user ? children : <Navigate to="/login" />
 };
 
 export default ProtectedRoute

@@ -23,7 +23,7 @@ function Login() {
       console.log("User logged in", res.data.user);
   
       setTimeout(() => {
-        console.log("Redirecting to home...");
+        
         navigate("/");
       }, 100);
     } catch (error) {
@@ -38,8 +38,8 @@ function Login() {
    }
     }
   return (
-    <div className="w-full h-screen bg-[url('/src/assets/bg.png')] bg-center bg-cover flex justify-center items-center flex-col relative transition-all duration-300">
-         <img src="/src/assets/logo.png" alt="logo" width={160} className='absolute top-6 left-1/2 -translate-x-1/2' />
+    <div className="w-full h-screen bg-[url('/bg.png')] bg-center bg-cover flex justify-center items-center flex-col relative transition-all duration-300">
+         <img src="/logo.png" alt="logo" width={160} className='absolute top-6 left-1/2 -translate-x-1/2' />
       <div className="bg-white p-8 rounded-2xl shadow-md w-80 text-center">
         <h1 className="font-light text-3xl mb-2">
           Welcome Back to <span className="font-bold text-indigo-500">Qurio</span>

@@ -6,7 +6,7 @@ import socket from "../web-sockets/socket";
 import Loading from "../components/Loading";
 
 function Home() {
-  const { user , loading } = useAuth();
+  const { user , loading ,setUser } = useAuth();
   const navigate = useNavigate();
   const [onlineUsers, setOnlineUsers] = useState([]);
   const [selectedTab, setSelectedTab ]= useState("chats");
@@ -208,6 +208,8 @@ function Home() {
   }, []);
   async function logoutUser() {
     await logout();
+
+    setUser(null)
     navigate("/login");
   }
   async function deleteAcc() {
@@ -242,7 +244,7 @@ function Home() {
   if (loading) return <Loading />
     
   return (
-    <div className="w-full h-screen bg-[url('/src/assets/bg.png')] bg-center bg-cover flex">
+    <div className="w-full h-screen bg-[url('/bg.png')] bg-center bg-cover flex">
       <div
         className={`contacts-bar w-full md:w-1/3 lg:w-1/4 bg-white border-r ${
           isMobileChatOpen ? "hidden md:block" : "block"
@@ -253,7 +255,7 @@ function Home() {
             
           
           <img
-            src="./src/assets/logo.png"
+            src="logo.png"
             className="w-24 md:w-20"
             alt="logo"
           />
@@ -287,15 +289,15 @@ function Home() {
               className="hidden"
             />
             <div onClick={()=> setShowPopup(true)} className="flex flex-col items-center cursor-pointer text-sm font-light"> <img
-              src="./src/assets/user.png"
+              src="user.png"
               className="w-10 h-10 border rounded-full p-1"
               alt="search icon"
             />Delete account</div>
 
              <div onClick={logoutUser} className="flex flex-col items-center text-sm font-light cursor-pointer"> <img
-              src="./src/assets/back.png"
+              src="back.png"
               className="w-10 h-10 border rounded-full p-1"
-              alt="search icon"
+              alt="back icon"
             />Log out</div>
           </div>
           }
@@ -406,7 +408,7 @@ function Home() {
       {selectedUser ? (
         <>
           <div
-            className={`messages-bar flex w-full flex-col md:w-2/3 lg:w-3/4 bg-[url('/src/assets/bg.png')] bg-center bg-cover ${
+            className={`messages-bar flex w-full flex-col md:w-2/3 lg:w-3/4 bg-[url('/bg.png')] bg-center bg-cover ${
               selectedUser ? "block" : "hidden"
             } ${isMobileChatOpen ? "block" : "hidden md:flex"}`}
           >
@@ -416,7 +418,7 @@ function Home() {
                 onClick={() => setIsMobileChatOpen(false)}
                 className="md:hidden mr-2 rounded font-black text-lg"
               >
-                <img src="./src/assets/back.png" width={15} alt="back icon" />
+                <img src="/back.png" width={15} alt="back icon" />
               </button>
 
               <img
@@ -514,7 +516,7 @@ function Home() {
                 className=" px-3 py-2 text-white rounded-full cursor-pointer"
               >
                 <img
-                  src="./src/assets/send.png"
+                  src="/send.png"
                   className="w-6 md:w-7"
                   alt=""
                 />
@@ -523,7 +525,7 @@ function Home() {
           </div>
         </>
       ) : (
-        <div className="messages-bar hidden md:flex flex-col justify-center items-center w-2/3 lg:w-3/4 bg-[url('/src/assets/bg.png')] bg-center bg-cover">
+        <div className="messages-bar hidden md:flex flex-col justify-center items-center w-2/3 lg:w-3/4 bg-[url('bg.png')] bg-center bg-cover">
           <h1 className="font-light text-4xl mb-1 pb-1 border-b-[1px] border-gray-300">
             Welcome to <span className="font-bold text-indigo-500">Qurio</span>
           </h1>

@@ -40,8 +40,8 @@ function Register() {
     
   }
   return (
-    <div className="w-full h-screen bg-[url('/src/assets/bg.png')] bg-center bg-cover flex justify-center items-center flex-col relative transition-all duration-300">
-    <img src="/src/assets/logo.png" alt="logo" width={160} className='absolute top-6 left-1/2 -translate-x-1/2' />
+    <div className="w-full h-screen bg-[url('/bg.png')] bg-center bg-cover flex justify-center items-center flex-col relative transition-all duration-300">
+    <img src="/logo.png" alt="logo" width={160} className='absolute top-6 left-1/2 -translate-x-1/2' />
 
     <div className="bg-white p-8 rounded-2xl shadow-md w-80 text-center backdrop-blur-sm bg-opacity-95 transition-all duration-500">
       <h1 className="font-light text-3xl mb-4">
