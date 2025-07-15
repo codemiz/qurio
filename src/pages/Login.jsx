@@ -6,6 +6,7 @@ import { NavLink } from 'react-router-dom'
 function Login() {
   const {setUser , user} = useAuth()
   const navigate = useNavigate()
+  const [error, setError] = useState(null)
   const [formData, setFormData] = useState({
   email: "",
   password: ""
@@ -26,11 +27,16 @@ function Login() {
         navigate("/");
       }, 100);
     } catch (error) {
-       console.log("Full error:", error);
-       console.log("Login error:", error?.response?.data || error.message);
+     if(error.response && error.response.status === 401){
+      setError("Incorrect password")
     }
-  }
-      
+    else if(error.response && error.response.status === 404){
+      setError("Email not registered")
+      //  console.log("Full error:", error);
+      //  console.log("Login error:", error?.response?.data || error.message);
+      }
+   }
+    }
   return (
     <div className="w-full h-screen bg-[url('/src/assets/bg.png')] bg-center bg-cover flex justify-center items-center flex-col relative transition-all duration-300">
          <img src="/src/assets/logo.png" alt="logo" width={160} className='absolute top-6 left-1/2 -translate-x-1/2' />
@@ -59,10 +65,9 @@ function Login() {
           className="w-full bg-[#F9FAFB] border border-gray-300 rounded-md px-3 py-2 text-sm text-[#111827] focus:outline-none focus:ring-2 focus:ring-indigo-300 mb-1"
           placeholder="Enter your password"
         />
-
-        <div className="text-right w-full text-xs text-indigo-500 mb-4 hover:underline cursor-pointer">
-          Forgot password?
-        </div>
+        {error && 
+          <p className='font-thin text-sm mb-1 text-red-500'>{error}</p>
+        }
 
         <button onClick={handleSubmit} className="bg-indigo-500 text-white w-full py-2 text-sm font-medium rounded-md hover:bg-indigo-600 transition">
           Log In

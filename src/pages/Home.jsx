@@ -3,9 +3,10 @@ import { useAuth } from "../context/AuthContext";
 import { logout, getMessages, getChatPreviews , uploadAvatar , deleteAccount } from "../api";
 import { useNavigate } from "react-router-dom";
 import socket from "../web-sockets/socket";
+import Loading from "../components/Loading";
 
 function Home() {
-  const { user } = useAuth();
+  const { user , loading } = useAuth();
   const navigate = useNavigate();
   const [onlineUsers, setOnlineUsers] = useState([]);
   const [selectedTab, setSelectedTab ]= useState("chats");
@@ -237,6 +238,8 @@ function Home() {
          uploadAvatar(formData)
       }
     }
+
+  if (loading) return <Loading />
     
   return (
     <div className="w-full h-screen bg-[url('/src/assets/bg.png')] bg-center bg-cover flex">
@@ -298,10 +301,10 @@ function Home() {
           }
         </div>
         <div className="flex justify-between w-full text-md font-light border-b-[1px] border-gray-200">
-          <div onClick={()=> setSelectedTab("chats")} className=" w-1/2 hover:bg-gray-200 bg-gray-200 cursor-pointer flex justify-center">
+          <div onClick={()=> setSelectedTab("chats")} className={`w-1/2 hover:bg-gray-200 ${selectedTab == "chats" &&  "bg-gray-200"} cursor-pointer flex justify-center`}>
             my chats
           </div>
-          <div onClick={()=> setSelectedTab("online")} className=" w-1/2 hover:bg-gray-100 cursor-pointer  flex justify-center">
+          <div onClick={()=> setSelectedTab("online")} className={`w-1/2 hover:bg-gray-100 cursor-pointer ${selectedTab == "online" &&  "bg-gray-200"} flex justify-center`}>
             online users
           </div>
           
@@ -381,7 +384,7 @@ function Home() {
        }}
         key={onlineUser._id}
        className={`p-3 md:p-2 ${
-        (user._id === onlineUser._id ) && "hidden"
+        (user._id === onlineUser._id || chatPreviews.some(obj =>obj.friend._id == onlineUser._id ) ) && "hidden"
       } hover:bg-gray-100 cursor-pointer flex gap-2 items-center border-b-[1px] border-gray-200 relative`}
      >
       <img src={onlineUser.profilePic}  alt="profile pic" className="w-12 h-12 rounded-full" />
@@ -545,13 +548,5 @@ function Home() {
 
 export default Home;
 
-{
-  /* <button
-            onClick={logoutUser}
-            className="bg-gray-200 px-2 font-thin ml-3 text-sm"
-          >
-            logout
-          </button> */
-}
 
  

@@ -8,6 +8,7 @@ import { NavLink } from 'react-router-dom'
 function Register() {
   const {setUser} = useAuth()
   const navigate = useNavigate()
+   const [error, setError] = useState(null)
     const [step, setStep] = useState(1)
     const [formData, setFormData] = useState({
     email: "",
@@ -30,6 +31,9 @@ function Register() {
       console.log(res);
       
     } catch (error) {
+      if(error.response && error.response.status === 400){
+      setError("User already exists")
+    }
       console.log(error.response.data);
       
     }
@@ -99,6 +103,9 @@ function Register() {
           className="w-full bg-[#F9FAFB] border border-gray-200 rounded-md px-3 py-2.5 text-sm text-[#111827] focus:outline-none focus:ring-2 focus:ring-indigo-300 mb-3"
           placeholder="Create password"
         />
+        {error && 
+          <p className='font-thin text-sm mb-1 text-red-500'>{error}</p>
+        }
         <button
           onClick={handleSubmit}
           className="bg-green-500 text-white w-full py-2 text-sm font-medium rounded-md hover:bg-green-600 transition active:scale-95"
