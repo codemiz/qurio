@@ -11,7 +11,7 @@ A fully functional real-time messaging web application built with the MERN stack
 ## Technologies Used: 
 
 - React
-- Node js
+- Node.js
 - Express
 - MongoDB
 - Tailwind
